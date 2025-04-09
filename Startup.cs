@@ -25,6 +25,9 @@ using WebAPISalesManagement.Services.Authorization;
 using WebAPISalesManagement.Services.Configuration;
 using WebAPISalesManagement.Services.Roles;
 using WebAPISalesManagement.Services.SupabaseClient;
+using WebAPISalesManagement.Services.Products;
+using WebAPISalesManagement.Services.Categories;
+using WebAPISalesManagement.Services.FileUpload;
 
 namespace WebAPISalesManagement
 {
@@ -115,10 +118,13 @@ namespace WebAPISalesManagement
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddHttpClient();
             #region Authorization Service
-            services.AddScoped<IConfigurationService, ConfigurationService>();
+            services.AddScoped<IConfigService, ConfigService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ISupabaseClientService, SupabaseClientService>();
             services.AddScoped<IRoleServices, RoleServices>();
+            services.AddScoped<IProductServices, ProductServices>();
+            services.AddScoped<ICategoryServices, CategoryService>();
+            services.AddScoped<IFileUploadService, FileUploadService>();
             #endregion
             // Add services to the container.
 
@@ -198,7 +204,7 @@ namespace WebAPISalesManagement
             {
                 endpoints.MapControllers();
             });
-
+           
             var cultureInfo = new CultureInfo("vi-VN");
             //cultureInfo.NumberFormat.CurrencySymbol = "đ";
             var dateTimeFormat = new DateTimeFormatInfo();
@@ -207,17 +213,6 @@ namespace WebAPISalesManagement
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
-        private Client CreateSupabaseClient(string schema)
-        {
-            return new Client(
-                Configuration["Authentication:SUPABASE_URL"],
-                Configuration["Authentication:SUPABASE_KEY"],
-                new SupabaseOptions
-                {
-                    AutoRefreshToken = true,
-                    AutoConnectRealtime = true,
-                    Schema = schema
-                });
-        }
+       
     }
 }

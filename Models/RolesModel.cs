@@ -7,9 +7,9 @@ namespace WebAPISalesManagement.Models
     public class RolesModel:BaseModel
     {
         [PrimaryKey("id", false)]
-        public Guid RoleId { get; set; }
+        public Guid Role_Id { get; set; }
         [Column("name")]
-        public string RoleName { get; set; }
+        public string Role_Name { get; set; }
         [Column("description")]
         public string Description { get; set; }
     }

@@ -90,3 +90,4 @@ C:\Users\vit002\Desktop\WebAPISalesManagement\WebAPISalesManagement\bin\Debug\ne
 C:\Users\vit002\Desktop\WebAPISalesManagement\WebAPISalesManagement\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\vit002\Desktop\WebAPISalesManagement\WebAPISalesManagement\bin\Debug\net8.0\WebAPISalesManagement.xml
 C:\Users\vit002\Desktop\WebAPISalesManagement\WebAPISalesManagement\obj\Debug\net8.0\WebAPISalesManagement.xml
+C:\Users\vit002\Desktop\WebAPISalesManagement\WebAPISalesManagement\obj\Debug\net8.0\WebAPISalesManagement.sourcelink.json

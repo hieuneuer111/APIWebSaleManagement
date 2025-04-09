@@ -14,9 +14,9 @@ namespace WebAPISalesManagement.Models
         [PrimaryKey("id", false)]
         public Guid User_id { get; set; }
         [Column("username")]
-        public string Username { get; set; }
+        public string User_name { get; set; }
         [Column("email")]
-        public string Email { get; set; }
+        public string User_email { get; set; }
         [Column("create_date")]
         public DateTime Date_create { get; set; }
         [Column("updated_at")]
@@ -24,11 +24,11 @@ namespace WebAPISalesManagement.Models
         [Column("role_id")]
         public Guid Role_id { get; set; }
         [Column("status")]
-        public bool Status { get; set; }
+        public bool User_Status { get; set; }
         [Column("phone")]
-        public string? Phone { get; set; }
+        public string? User_Phone { get; set; }
         [Column("full_name")]
-        public string? FullName { get; set; }
+        public string? User_FullName { get; set; }
         [Column("user_number")]
         public string User_Number { get; set; }
         [Column("vetify_email")]

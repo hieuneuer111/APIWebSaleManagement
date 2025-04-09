@@ -32,8 +32,8 @@ namespace WebAPISalesManagement.Services.Authorization
         private readonly IRoleServices _roleServices;
         private readonly Supabase.Client _supabaseClient;
        
-        private readonly WebAPISalesManagement.Services.Configuration.IConfigurationService  _configurationService;
-        public AuthService(ISupabaseClientService supabaseClientService, WebAPISalesManagement.Services.Configuration.IConfigurationService configurationService, Supabase.Client supabaseClient, IRoleServices roleServices)
+        private readonly WebAPISalesManagement.Services.Configuration.IConfigService  _configurationService;
+        public AuthService(ISupabaseClientService supabaseClientService, WebAPISalesManagement.Services.Configuration.IConfigService configurationService, Supabase.Client supabaseClient, IRoleServices roleServices)
         {
         
             _supabaseClientService = supabaseClientService;
@@ -138,13 +138,13 @@ namespace WebAPISalesManagement.Services.Authorization
                             // Thực hiện hành động bạn muốn khi người dùng mới đăng ký
                             UsersModel userModel = new UsersModel()
                             {
-                                Email = userLogin.Email,                               
-                                FullName = userLogin.FullName,
-                                Phone = userLogin.Phone,
+                                User_email = userLogin.Email,                               
+                                User_FullName = userLogin.FullName,
+                                User_Phone = userLogin.Phone,
                                 Role_id = userLogin.RoleId,
-                                Status = userLogin.Status,
+                                User_Status = userLogin.Status,
                                 User_Number = userLogin.Usernumber,
-                                Username = userLogin.UserName,
+                                User_name = userLogin.UserName,
                                 User_id = Guid.Parse(response.User.Id),
                                 //"70db78df-18d0-47ee-bf90-574424e59d76"
                             };
@@ -160,7 +160,7 @@ namespace WebAPISalesManagement.Services.Authorization
                                 result.Data = new SupabaseUserResponse
                                 {
                                     Id = userRegisterReponse.User_id,
-                                    Email = userRegisterReponse.Email,
+                                    Email = userRegisterReponse.User_email,
                                     Role = roleUser,
                                     Userrights = rights_SP
                                 };

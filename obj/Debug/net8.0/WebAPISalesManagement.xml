@@ -4,5 +4,100 @@
         <name>WebAPISalesManagement</name>
     </assembly>
     <members>
+        <member name="M:WebAPISalesManagement.Controllers.AuthorizationController.LoginJWTAsync(WebAPISalesManagement.ModelRequests.LoginSupabaseRequest)">
+            <summary>
+            Đăng nhập lấy token JWT
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.AuthorizationController.RegisterAuthorizationJWT(WebAPISalesManagement.ModelRequests.UserRegisterResquest)">
+            <summary>
+            Đăng kí tài khoản bắt buộc có email
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.UploadFileAsync(System.String,Microsoft.AspNetCore.Http.IFormFile,System.Boolean)">
+            <summary>
+            Upload File To Storage Supabase
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.DeleteFolderAsync(System.String)">
+            <summary>
+            Xóa tất cả file trong folder SUPABASE 
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetProductById(System.String)">
+            <summary>
+            Lấy product dựa vào product id
+            </summary>
+            <param name="requestId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.AddProduct(WebAPISalesManagement.ModelResquests.ProductResquest)">
+            <summary>
+            Thêm sản phẩm
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.DeleteProduct(System.String)">
+            <summary>
+            Xóa sản phẩm
+            </summary>
+            <param name="productId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.UpdateProductImgURL(System.String,System.String)">
+            <summary>
+            Thay đổi địa chỉ hình ảnh sản phẩm
+            </summary>
+            <param name="productId"></param>
+            <param name="urlImg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetCategoriesAsync(System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Láy ds danh mục sản phẩm
+            </summary>
+            <param name="search"></param>
+            <param name="PageNumber"></param>
+            <param name="PageSize"></param>
+            <param name="isPaging"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.UpdateCategoryItems(WebAPISalesManagement.ModelResponses.CategoryResponse)">
+            <summary>
+            Chỉnh sửa dm sản phẩm
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.AddCategoryItems(WebAPISalesManagement.ModelResquests.CategoryResquest)">
+            <summary>
+            Thêm dm sản phẩm
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.DeleteCategoryItems(System.String)">
+            <summary>
+            Xóa dm sản phẩm
+            </summary>
+            <param name="categoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetDetailCategory(System.String)">
+            <summary>
+            Lấy chi tiết dm sản phẩm theo id
+            </summary>
+            <param name="categoryId"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

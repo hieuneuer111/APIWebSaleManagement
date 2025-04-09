@@ -2,7 +2,7 @@
 
 namespace WebAPISalesManagement.Services.Configuration
 {
-    public interface IConfigurationService
+    public interface IConfigService
     {      
         JWT GetJWT();
     }

@@ -10,7 +10,9 @@
         "tags": [
           "Authorization"
         ],
+        "summary": "Đăng nhập lấy token JWT",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -41,7 +43,9 @@
         "tags": [
           "Authorization"
         ],
+        "summary": "Đăng kí tài khoản bắt buộc có email",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -60,6 +64,352 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/UploadFile": {
+      "post": {
+        "tags": [
+          "FileUpload"
+        ],
+        "summary": "Upload File To Storage Supabase",
+        "parameters": [
+          {
+            "name": "folderName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IsUpdateUrlImgToProduct",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/DeleteFolder": {
+      "delete": {
+        "tags": [
+          "FileUpload"
+        ],
+        "summary": "Xóa tất cả file trong folder SUPABASE",
+        "parameters": [
+          {
+            "name": "urlImgDelete",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/GetProductById": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Lấy product dựa vào product id",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/AddProduct": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Thêm sản phẩm",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductResquest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductResquest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductResquest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/DeleteProduct": {
+      "delete": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Xóa sản phẩm",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/UpdateProductImgURL": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Thay đổi địa chỉ hình ảnh sản phẩm",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "urlImg",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/GetCategories": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Láy ds danh mục sản phẩm",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "isPaging",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/UpdateCategory": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Chỉnh sửa dm sản phẩm",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryResponse"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryResponse"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryResponse"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/AddCategory": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Thêm dm sản phẩm",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryResquest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryResquest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryResquest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/DeleteCategory": {
+      "delete": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Xóa dm sản phẩm",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Product/GetDetailCategory": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Lấy chi tiết dm sản phẩm theo id",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -109,6 +459,38 @@
   },
   "components": {
     "schemas": {
+      "CategoryResponse": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryDes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryResquest": {
+        "type": "object",
+        "properties": {
+          "rCategoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "rCategoryDes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginSupabaseRequest": {
         "type": "object",
         "properties": {
@@ -119,6 +501,31 @@
           "password": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductResquest": {
+        "type": "object",
+        "properties": {
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "productPrice": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "productDes": {
+            "type": "string",
+            "nullable": true
+          },
+          "productStatus": {
+            "type": "boolean"
+          },
+          "productCategory": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false

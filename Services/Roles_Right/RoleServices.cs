@@ -39,12 +39,12 @@ namespace WebAPISalesManagement.Services.Roles
 
         public async Task<RolesResponse> GetRolesByIDAsync(Guid roleID)
         {
-            ModeledResponse<RolesModel> SupabaseResponse = await _clientSupabase.From<RolesModel>().Where(u => u.RoleId == roleID).Get();
+            ModeledResponse<RolesModel> SupabaseResponse = await _clientSupabase.From<RolesModel>().Where(u => u.Role_Id == roleID).Get();
             RolesModel rolesModel = SupabaseResponse.Models.FirstOrDefault();
             RolesResponse roles = new RolesResponse()
             {
-                RoleId = rolesModel.RoleId,
-                RoleName = rolesModel.RoleName,
+                RoleId = rolesModel.Role_Id,
+                RoleName = rolesModel.Role_Name,
                 Description = rolesModel.Description,
             };
             return roles;
