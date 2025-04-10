@@ -22,10 +22,29 @@ namespace WebAPISalesManagement.Controllers
             _productServices = productServices;
             _categoryServices = categoryServices;
         }
-        // GET: api/<AuthorizationController>
-
-
-        // POST api/<AuthorizationController>
+        /// <summary>
+        /// Get All Product Return List
+        /// </summary>
+        /// <param name="search"></param>
+        /// <param name="PageNumber"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="isPaging"></param>
+        /// <param name="isDecPrice"></param>
+        /// <param name="categoryItem"></param>
+        /// <returns></returns>
+        [HttpPost("GetItemsMenu")]
+        public async Task<ActionResult> GetProduct(string search = "", int PageNumber = 1, int PageSize = 10, bool isPaging = false, bool isDecPrice = true, List<string> categoryItem = null)
+        {
+            try
+            {
+                ModelDataPageResponse<List<ProductResponse>> result = await _productServices.GetProductAsync(search = "", categoryItem, PageNumber, PageSize, isPaging, isDecPrice = true);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /// <summary>
         /// Lấy product dựa vào product id
         /// </summary>

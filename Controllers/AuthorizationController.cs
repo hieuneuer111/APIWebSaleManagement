@@ -59,6 +59,6 @@ namespace WebAPISalesManagement.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        // 
+        //
     }
 }

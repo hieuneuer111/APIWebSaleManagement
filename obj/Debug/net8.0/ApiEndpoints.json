@@ -33,6 +33,22 @@
   },
   {
     "ContainingType": "WebAPISalesManagement.Controllers.FileUploadController",
+    "Method": "DeleteAllFileFolder",
+    "RelativePath": "DeleteAllFileFolder",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "folderName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.FileUploadController",
     "Method": "DeleteFolderAsync",
     "RelativePath": "DeleteFolder",
     "HttpMethod": "DELETE",
@@ -41,6 +57,22 @@
     "Parameters": [
       {
         "Name": "urlImgDelete",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.FileUploadController",
+    "Method": "GetFileByFolder",
+    "RelativePath": "GetFileByFolder",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "folderName",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -160,6 +192,47 @@
   },
   {
     "ContainingType": "WebAPISalesManagement.Controllers.ProductController",
+    "Method": "GetProduct",
+    "RelativePath": "Product/GetItemsMenu",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "isPaging",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "isDecPrice",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "categoryItem",
+        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ProductController",
     "Method": "GetProductById",
     "RelativePath": "Product/GetProductById",
     "HttpMethod": "GET",
@@ -206,6 +279,32 @@
       {
         "Name": "urlImg",
         "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.FileUploadController",
+    "Method": "UpdateFile",
+    "RelativePath": "UpdateFile",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "folderName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsUpdateUrlImgToProduct",
+        "Type": "System.Boolean",
         "IsRequired": false
       }
     ],

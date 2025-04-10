@@ -11,6 +11,7 @@ using WebAPISalesManagement.Swagger;
 using Supabase.Postgrest.Responses;
 using WebAPISalesManagement.Services.Products;
 using WebAPISalesManagement.Models;
+using WebAPISalesManagement.Services.SupabaseClient;
 
 namespace WebAPISalesManagement.Services.FileUpload
 {
@@ -22,8 +23,9 @@ namespace WebAPISalesManagement.Services.FileUpload
         private readonly string supabaseApiKey; // Lấy API Key Supabase từ appsettings.json
         private readonly string bucketName;
         private readonly Supabase.Client _supabaseClient;
+        private readonly ISupabaseClientService _supabaseClientService;
 
-        public FileUploadService(HttpClient httpClient, IConfigService configuration, Supabase.Client supabaseClient)
+        public FileUploadService(HttpClient httpClient, IConfigService configuration, Supabase.Client supabaseClient, ISupabaseClientService supabaseClientService)
         {
             _httpClient = httpClient;
             _configuration = configuration;
@@ -31,6 +33,7 @@ namespace WebAPISalesManagement.Services.FileUpload
              supabaseApiKey = _configuration.GetJWT().SUPABASE_KEY; // Lấy API Key Supabase từ appsettings.json
              bucketName = _configuration.GetJWT().BucketUploadName;
             _supabaseClient = supabaseClient;
+            _supabaseClientService = supabaseClientService;
         }
 
         public async Task<string> UploadFileAsync(IFormFile file, string folderName, string fileName, bool UpdateUrlImgToProduct)
@@ -115,6 +118,34 @@ namespace WebAPISalesManagement.Services.FileUpload
             }
             return modelResponse;
         }
-        
+        public async Task<ModelDataResponse<List<SP_GetFilesByFolderResponse>>> GetFileByFolderSupabase(string folderName)
+        {
+            ModelDataResponse<List<SP_GetFilesByFolderResponse>> modelResponse = new ModelDataResponse<List<SP_GetFilesByFolderResponse>>();
+            try
+            {
+                List<SP_GetFilesByFolderResponse> filesList = await _supabaseClientService.GetFileByFolderAsync(folderName);
+                modelResponse.IsValid = true;
+                modelResponse.ItemResponse = filesList;
+            }
+            catch (Exception ex) {
+                modelResponse.IsValid = false;
+                modelResponse.ItemResponse = null;
+                modelResponse.ValidationMessages.Add(ex.Message);
+            }
+            return modelResponse;
+        }
+        public async Task<ModelResponse> UpdateFileByFolder(string folderName, IFormFile file)
+        {
+            ModelResponse modelResponse = new ModelResponse();
+            /// Xóa file trong thư mục cũ         
+            SP_DeleteAllFileInFolderResponse responseDeleteFolder = await _supabaseClientService.DeleteAllFileInFolder(folderName);
+            if (responseDeleteFolder.AllDeleted == true || responseDeleteFolder.FolderExisted == false) {
+                /// đã xóa thành công tạo mới
+                string urlImg = await UploadFileAsync(file, folderName, file.FileName, true);
+                /// 
+            }
+            ///////////////////
+            return modelResponse;   
+        }
     }
 }

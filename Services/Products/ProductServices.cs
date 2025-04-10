@@ -1,5 +1,6 @@
 ﻿using Supabase.Interfaces;
 using Supabase.Postgrest.Responses;
+using WebAPISalesManagement.Helpers;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.ModelResquests;
 using WebAPISalesManagement.Models;
@@ -156,5 +157,58 @@ namespace WebAPISalesManagement.Services.Products
             }
             return response;
         }
+        public async Task<ModelDataPageResponse<List<ProductResponse>>> GetProductAsync(string search, List<string> category, int PageNumber, int PageSize, bool isPaging, bool isDescendPrice)
+        {
+            // Lấy danh sách MenuItems từ Supabase
+            ModeledResponse<ProductsModel> SupabaseResponseMenuItems = await _clientSupabase.From<ProductsModel>().Get();
+            List<ProductsModel> SupabaseListMenuItems = SupabaseResponseMenuItems.Models.ToList();
+
+            // Tìm kiếm theo tên món ăn (nếu có)
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                StringConvert conv = new StringConvert();
+                search = conv.ConvertToUnSign(search);
+                SupabaseListMenuItems = SupabaseListMenuItems.Where(tb => conv.ConvertToUnSign(tb.Product_Name).Contains(search)).ToList();
+            }
+
+            // Lọc theo danh mục (nếu có)
+            if (category != null)
+            {
+                if (category.Count > 0)
+                    SupabaseListMenuItems = SupabaseListMenuItems.Where(tb => category.Contains(tb.Product_Category.ToString())).ToList();
+            }
+
+            // Sử dụng Task.WhenAll để đợi các tác vụ bất đồng bộ
+            var productResponsesTasks = SupabaseListMenuItems.Select(async (ProductsModel item) =>
+            {
+                CategoryResponse categoryResponse = await _categoryServices.GetCategoryByIdAsync(item.Product_Category);
+                return new ProductResponse
+                {
+                  ProductCategory = categoryResponse,
+                  ProductDes = item.Product_Des,
+                  ProductName = item.Product_Name,  
+                  ProductId = item.Product_Id,
+                  ProductImgUrl = item.Product_ImgURL,
+                  ProductPrice = item.Product_Price,
+                  ProductStatus = item.Product_Status,
+                };
+            }).ToList();
+            // Đợi tất cả các tác vụ hoàn tất và trả về kết quả
+            List<ProductResponse> productResponse = (await Task.WhenAll(productResponsesTasks)).ToList();
+            if (isDescendPrice)
+            {
+                productResponse = productResponse.OrderByDescending(c => c.ProductPrice).ToList();
+            }
+            else
+            {
+                productResponse = productResponse.OrderBy(c => c.ProductPrice).ToList();
+            }
+            ModelDataPageResponse<List<ProductResponse>> result =
+               Helpers.PaginationHelper.createPageDataResponse<List<ProductResponse>>(productResponse.Count, PageNumber, PageSize, false);
+            productResponse = isPaging ? productResponse.Skip((result.currentPage - 1) * result.pageSize).Take(result.pageSize).ToList() : productResponse;
+            result.items = productResponse;
+            return result;
+        }
+
     }
 }

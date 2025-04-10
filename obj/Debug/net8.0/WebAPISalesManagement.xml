@@ -25,11 +25,37 @@
             <param name="file"></param>
             <returns></returns>
         </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.GetFileByFolder(System.String)">
+            <summary>
+            Get files in folder Supabase
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPISalesManagement.Controllers.FileUploadController.DeleteFolderAsync(System.String)">
             <summary>
             Xóa tất cả file trong folder SUPABASE 
             </summary>
             <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.DeleteAllFileFolder(System.String)">
+            <summary>
+            Delete all folder using store produce
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetProduct(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})">
+            <summary>
+            Get All Product Return List
+            </summary>
+            <param name="search"></param>
+            <param name="PageNumber"></param>
+            <param name="PageSize"></param>
+            <param name="isPaging"></param>
+            <param name="isDecPrice"></param>
+            <param name="categoryItem"></param>
             <returns></returns>
         </member>
         <member name="M:WebAPISalesManagement.Controllers.ProductController.GetProductById(System.String)">

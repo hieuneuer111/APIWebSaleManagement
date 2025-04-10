@@ -10,7 +10,10 @@ namespace WebAPISalesManagement.Services.SupabaseClient
         Task<SP_GetUserByUNameResponse> GetUserByUsernameAsync(string username);
         Task<List<SP_GetRightByUidRightIdResponse>> GetRightByRoleIdAsync(string roleId);
         Task<List<SP_GetRightByUidRightIdResponse>> GetRightByUIdAsync(Guid userIdResquest);
-        
-      
+        Task<List<SP_GetFilesByFolderResponse>> GetFileByFolderAsync(string folderName);
+        Task<SP_DeleteAllFileInFolderResponse> DeleteAllFileInFolder(string folder);
+
+
+
     }
 }
