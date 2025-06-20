@@ -28,6 +28,9 @@ using WebAPISalesManagement.Services.SupabaseClient;
 using WebAPISalesManagement.Services.Products;
 using WebAPISalesManagement.Services.Categories;
 using WebAPISalesManagement.Services.FileUpload;
+using WebAPISalesManagement.Services.Invoices;
+using WebAPISalesManagement.Services.Discounts;
+using WebAPISalesManagement.Services.Reports;
 
 namespace WebAPISalesManagement
 {
@@ -125,6 +128,9 @@ namespace WebAPISalesManagement
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<ICategoryServices, CategoryService>();
             services.AddScoped<IFileUploadService, FileUploadService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IDiscountServices, DiscountServices>();
+            services.AddScoped<IReportServices, ReportServices>();
             #endregion
             // Add services to the container.
 

@@ -196,6 +196,18 @@ namespace WebAPISalesManagement.Services.Authorization
             }
            
         }
-        
+        public async Task<UserResponse> GetUserInfoById(Guid uid)
+        {
+            UserResponse userResponse = new UserResponse();
+            ModeledResponse<UsersModel> supabaseResponse = await _supabaseClient.From<UsersModel>().Where(i => i.User_id == uid).Get();
+            UsersModel? supabaseUser = supabaseResponse.Models.FirstOrDefault();
+            if (supabaseUser != null) { 
+                userResponse.User_Email = supabaseUser.User_email;
+                userResponse.User_Name = supabaseUser.User_name;   
+                userResponse.User_Id = supabaseUser.User_id;
+                userResponse.FullName = supabaseUser.User_FullName;
+            }
+            return userResponse;
+        }
     }
 }

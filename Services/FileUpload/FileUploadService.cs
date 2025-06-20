@@ -1,16 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.IO;
-using Supabase;
-using System.Net.Http;
+﻿using System.Net.Http.Headers;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.Services.Configuration;
-using Supabase.Interfaces;
 using WebAPISalesManagement.Swagger;
 using Supabase.Postgrest.Responses;
-using WebAPISalesManagement.Services.Products;
 using WebAPISalesManagement.Models;
+using Supabase.Interfaces;
 using WebAPISalesManagement.Services.SupabaseClient;
 
 namespace WebAPISalesManagement.Services.FileUpload
@@ -36,53 +30,62 @@ namespace WebAPISalesManagement.Services.FileUpload
             _supabaseClientService = supabaseClientService;
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file, string folderName, string fileName, bool UpdateUrlImgToProduct)
+        public async Task<string> UploadFileAsync(IFormFile file, string productId, string fileName, bool UpdateUrlImgToProduct)
         {
+           
             try
-            {                                                       // Cập nhật Key để chỉ định thư mục
-                string filePath = $"{folderName}/{fileName}"; // Thư mục + tên file
-                string url = $"{supabaseUrl}/storage/v1/object/{bucketName}/{filePath}";
-                using (var formData = new MultipartFormDataContent())
+            {
+                if (await CheckProductId(productId))
                 {
-                    using (var fileStream = file.OpenReadStream())
+
+                    // Cập nhật Key để chỉ định thư mục
+                    string filePath = $"{productId}/{fileName}"; // Thư mục + tên file
+                    string url = $"{supabaseUrl}/storage/v1/object/{bucketName}/{filePath}";
+                    using (var formData = new MultipartFormDataContent())
                     {
-                        StreamContent fileContent = new StreamContent(fileStream);
-                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                        formData.Add(fileContent, "file", fileName);
-
-                        // Thêm header Authorization với Bearer token
-                        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", supabaseApiKey);
-
-                        // Gửi yêu cầu POST lên Supabase Storage
-                        HttpResponseMessage response = await _httpClient.PostAsync(url, formData);
-
-                        if (response.IsSuccessStatusCode)
+                        using (var fileStream = file.OpenReadStream())
                         {
-                            string responseContent = await response.Content.ReadAsStringAsync();
-                            UploadSupabaseResponse responseObject = System.Text.Json.JsonSerializer.Deserialize<UploadSupabaseResponse>(responseContent);
+                            StreamContent fileContent = new StreamContent(fileStream);
+                            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                            formData.Add(fileContent, "file", fileName);
 
-                            // Tạo URL đầy đủ của file sau khi upload
-                            string fileUrl = $"{supabaseUrl}/storage/v1/object/{bucketName}/{filePath}";
-                            if (UpdateUrlImgToProduct)
+                            // Thêm header Authorization với Bearer token
+                            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", supabaseApiKey);
+
+                            // Gửi yêu cầu POST lên Supabase Storage
+                            HttpResponseMessage response = await _httpClient.PostAsync(url, formData);
+
+                            if (response.IsSuccessStatusCode)
                             {
-                                Guid id = Guid.Parse(folderName);
-                                if (id != Guid.Empty)
+                                string responseContent = await response.Content.ReadAsStringAsync();
+                                UploadSupabaseResponse responseObject = System.Text.Json.JsonSerializer.Deserialize<UploadSupabaseResponse>(responseContent);
+
+                                // Tạo URL đầy đủ của file sau khi upload
+                                string fileUrl = $"{supabaseUrl}/storage/v1/object/{bucketName}/{filePath}";
+                                if (UpdateUrlImgToProduct)
                                 {
-                                    ModeledResponse<ProductsModel> updateResponse = await _supabaseClient
-                                                      .From<ProductsModel>()
-                                                      .Where(x => x.Product_Id == id)
-                                                      .Set(x => x.Product_ImgURL, fileUrl)
-                                                      .Update();
+                                    Guid id = Guid.Parse(productId);
+                                    if (id != Guid.Empty)
+                                    {
+                                        ModeledResponse<ProductsModel> updateResponse = await _supabaseClient
+                                                          .From<ProductsModel>()
+                                                          .Where(x => x.Product_Id == id)
+                                                          .Set(x => x.Product_ImgURL, fileUrl)
+                                                          .Update();
+                                    }
                                 }
+                                return fileUrl;
                             }
-                            return fileUrl;
-                        }
-                        else
-                        {
-                            string errorMessage = await response.Content.ReadAsStringAsync();
-                            throw new Exception($"Upload failed: {errorMessage}");
+                            else
+                            {
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                throw new Exception($"Upload failed: {errorMessage}");
+                            }
                         }
                     }
+                }
+                else {
+                    throw new Exception($"Upload failed: No product");
                 }
             }
             catch (Exception ex)
@@ -136,16 +139,160 @@ namespace WebAPISalesManagement.Services.FileUpload
         }
         public async Task<ModelResponse> UpdateFileByFolder(string folderName, IFormFile file)
         {
+            Guid guid = Guid.Parse(folderName);
             ModelResponse modelResponse = new ModelResponse();
-            /// Xóa file trong thư mục cũ         
-            SP_DeleteAllFileInFolderResponse responseDeleteFolder = await _supabaseClientService.DeleteAllFileInFolder(folderName);
-            if (responseDeleteFolder.AllDeleted == true || responseDeleteFolder.FolderExisted == false) {
-                /// đã xóa thành công tạo mới
-                string urlImg = await UploadFileAsync(file, folderName, file.FileName, true);
-                /// 
+            ModeledResponse<ProductsModel> supabaseResponseProduct = await _supabaseClient
+               .From<ProductsModel>()
+               .Where(c => c.Product_Id == guid)  // Sử dụng điều kiện để lọc theo categoryID
+               .Get();
+            if (supabaseResponseProduct.Models != null && supabaseResponseProduct.Models.Any())
+            {
+                ProductsModel model = supabaseResponseProduct.Models.FirstOrDefault();
+                // Nếu có ảnh cũ => xóa trước
+                if (!string.IsNullOrWhiteSpace(model.Product_ImgURL))
+                {
+                    string? oldFilePath = ExtractStoragePathFromUrl(model.Product_ImgURL);
+                    if (!string.IsNullOrWhiteSpace(oldFilePath))
+                    {
+                        await DeleteFile(oldFilePath);
+                    }
+                }
+
+                // Tạo tên file mới
+                string newFileName = $"{Guid.NewGuid()}_{file.FileName}";
+                // Upload ảnh mới
+                string urlImg = await UploadFileAsync(file, folderName, newFileName, true);
+
+                if (!string.IsNullOrWhiteSpace(urlImg))
+                {
+                    modelResponse.IsValid = true;
+                    modelResponse.ValidationMessages.Add("Update file success!!");
+                    modelResponse.ValidationMessages.Add("URL: " + urlImg);
+                }
+                else
+                {
+                    modelResponse.IsValid = false;
+                    modelResponse.ValidationMessages.Add("Update failed, no URL returned.");
+                }
             }
-            ///////////////////
-            return modelResponse;   
+            return modelResponse;
         }
+
+        public async Task<ModelResponse> DeleteFolderByNameAsync(string folderName)
+        {
+            ModelResponse response = new ModelResponse(); 
+            // Thay bằng bucket bạn dùng
+            string bucket = _configuration.GetJWT().BucketUploadName;
+
+            if (string.IsNullOrWhiteSpace(folderName))
+            {
+                response.IsValid = false;
+                response.ValidationMessages.Add("Folder name is empty.");
+                return response;
+            }
+
+            try
+            {
+                // List tất cả file trong folder
+                var filesInFolder = await _supabaseClient.Storage
+                    .From(bucket)
+                    .List(folderName);
+
+                if (filesInFolder == null || filesInFolder.Count == 0)
+                {
+                    response.IsValid = true;
+                    response.ValidationMessages.Add("Folder is already empty or not found.");
+                    return response;
+                }
+
+                // Tạo danh sách đường dẫn file để xóa
+                var filePaths = filesInFolder
+                    .Select(f => $"{folderName}/{f.Name}")
+                    .ToList();
+
+                // Gọi Supabase xóa file
+                await _supabaseClient.Storage.From(bucket).Remove(filePaths);
+
+                response.IsValid = true;
+                response.ValidationMessages.Add("All files in folder deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                response.IsValid = false;
+                response.ValidationMessages.Add($"Error deleting folder: {ex.Message}");
+            }
+
+            return response;
+        }
+
+        private string? ExtractStoragePathFromUrl(string fullUrl)
+        {
+            try
+            {
+                var uri = new Uri(fullUrl);
+                var segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+                // Đảm bảo đường dẫn đúng định dạng: /storage/v1/object/{bucket}/{...path}
+                if (segments.Length >= 5 && segments[0] == "storage" && segments[1] == "v1" && segments[2] == "object")
+                {
+                    // Bắt đầu từ index 4: bỏ storage/v1/object/{bucket}
+                    string pathInBucket = string.Join('/', segments.Skip(4));
+                    return pathInBucket;
+                }
+            }
+            catch
+            {
+                // ignore errors
+            }
+
+            return null;
+        }
+
+
+        public async Task<bool> DeleteFile(string pathInBucket)
+        {
+            try
+            {
+                string bucketName = _configuration.GetJWT().BucketUploadName;
+
+                var result = await _supabaseClient.Storage
+                    .From(bucketName)
+                    .Remove(new List<string> { pathInBucket });
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Ghi log nếu cần
+                return false;
+            }
+        }
+
+
+        public async Task<bool> CheckProductId(string productId)
+        {
+            if (String.IsNullOrWhiteSpace(productId))
+            {
+                return false;
+            }
+            else
+            {
+                Guid guid = Guid.Parse(productId);
+                // Gọi từ bảng CategoriesItemsModel và sử dụng phương thức Where để lọc theo categoryID
+                ModeledResponse<ProductsModel> supabaseResponseCategory = await _supabaseClient
+                    .From<ProductsModel>()
+                    .Where(c => c.Product_Id == guid)  // Sử dụng điều kiện để lọc theo categoryID
+                    .Get();
+                if (supabaseResponseCategory.Models != null && supabaseResponseCategory.Models.Any())
+                {
+                    return true;
+                }
+                else { 
+                    return false; 
+                }    
+            }
+        }
+
+       
     }
 }

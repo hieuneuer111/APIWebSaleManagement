@@ -9,5 +9,6 @@ namespace WebAPISalesManagement.Services.FileUpload
         Task<ModelResponse> DeleteFilesInFolderAsync(string urlProduct);
         Task<ModelDataResponse<List<SP_GetFilesByFolderResponse>>> GetFileByFolderSupabase(string folderName);
         Task<ModelResponse> UpdateFileByFolder(string folderName, IFormFile file);
+        Task<ModelResponse> DeleteFolderByNameAsync(string folderName);
     }
 }

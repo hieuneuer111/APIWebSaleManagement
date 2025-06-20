@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Text;
 using System.Web;
+using System.Globalization;
 
 namespace WebAPISalesManagement.Helpers
 {
@@ -9,6 +10,15 @@ namespace WebAPISalesManagement.Helpers
         public StringConvert()
         {
 
+        }
+        public static string DateTimeConvert(DateTime datetime, bool isOnlyDate) {
+            if (!isOnlyDate) {
+                return Convert.ToDateTime(datetime.ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+            }
+            else {
+                return Convert.ToDateTime(datetime.ToString()).ToString("dd/MM/yyyy");
+            }
+           
         }
         public string ConvertToUnSign(string input)
         {

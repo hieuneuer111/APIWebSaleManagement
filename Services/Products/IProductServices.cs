@@ -10,6 +10,7 @@ namespace WebAPISalesManagement.Services.Products
         Task<ModelResponse> UpdateImgUrlProduct(string productId, string urlProduct);
         Task<ModelDataResponse<ProductResponse>> AddProductAsync(ProductResquest productResquest);
         Task<ModelResponse> DeleteProductItemsAsync(Guid productId);
+        Task<ModelResponse> UpdateProduct(Guid guid, ProductResquest product);
         Task<ModelDataPageResponse<List<ProductResponse>>> GetProductAsync(string search, List<string> category, int PageNumber, int PageSize, bool isPaging, bool isDescendPrice);
     }
 }

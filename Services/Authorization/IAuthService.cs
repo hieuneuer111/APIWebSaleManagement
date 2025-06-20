@@ -14,5 +14,6 @@ namespace WebAPISalesManagement.Services.Authorization
         Task<Response<SupabaseUserResponse>> Register(UserRegisterResquest userLogin);
         Task<Response<SupabaseResponse>> ReloadByRefreshToken(string refreshToken);
         Task<bool> VerifyEmailAsync(Guid idUser);
+        Task<UserResponse> GetUserInfoById(Guid uid);
     }
 }

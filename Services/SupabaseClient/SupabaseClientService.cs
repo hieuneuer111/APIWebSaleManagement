@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Supabase;
 using Supabase.Gotrue;
+using Supabase.Postgrest.Responses;
 using WebAPISalesManagement.Services.SupabaseClient;
 using WebAPISalesManagement.Helpers;
 using WebAPISalesManagement.ModelResponses;
@@ -9,6 +10,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using WebAPISalesManagement.Swagger;
 using Newtonsoft.Json.Linq;
+using System.Runtime.InteropServices;
 
 namespace WebAPISalesManagement.Services.SupabaseClient
 {
@@ -225,5 +227,175 @@ namespace WebAPISalesManagement.Services.SupabaseClient
 
             return sp_result;
         }
+        public async Task<List<SP_GetProductByInvoiceResponce>> GetProductByInvoice(Guid idInvoices)
+        {
+            try
+            {
+                // Gọi stored procedure getUserByUsername từ Supabase
+                var response = await _supabaseClient
+                    .Rpc(StoreProcedureSupabase.GetProductByInvoices, new { invoiceid = idInvoices });
+
+                // Kiểm tra mã trạng thái của phản hồi
+                if (response.ResponseMessage?.IsSuccessStatusCode == true)
+                {
+                    // Nếu phản hồi thành công, lấy dữ liệu từ Content
+                    if (response.Content != null || response.Content != "[]")
+                    {
+                        // Giả sử Content là JSON, hãy deserialize nó thành kiểu User
+                        //var user = JsonConvert.DeserializeObject<User>(response.Content);
+                        List<SP_GetProductByInvoiceResponce> result = JsonConvert.DeserializeObject<List<SP_GetProductByInvoiceResponce>>(response.Content);
+                        if (result.Count > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+                else
+                {
+                    // Nếu không thành công, in ra thông báo lỗi
+                    return null;
+                }
+                // Nếu có lỗi hoặc không có dữ liệu
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<List<SP_GetDiscountByInvoiceResponse>> GetDiscountByInvoice(Guid idInvoices)
+        {
+            try
+            {
+                // Gọi stored procedure getUserByUsername từ Supabase
+                var response = await _supabaseClient
+                    .Rpc(StoreProcedureSupabase.GetDiscountsByInvoices, new { invoiceid = idInvoices });
+
+                // Kiểm tra mã trạng thái của phản hồi
+                if (response.ResponseMessage?.IsSuccessStatusCode == true)
+                {
+                    // Nếu phản hồi thành công, lấy dữ liệu từ Content
+                    if (response.Content != null || response.Content != "[]")
+                    {
+                        // Giả sử Content là JSON, hãy deserialize nó thành kiểu User
+                        //var user = JsonConvert.DeserializeObject<User>(response.Content);
+                        List<SP_GetDiscountByInvoiceResponse>? result = JsonConvert.DeserializeObject<List<SP_GetDiscountByInvoiceResponse>>(response.Content);
+                        if (result?.Count > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+                else
+                {
+                    // Nếu không thành công, in ra thông báo lỗi
+                    return null;
+                }
+                // Nếu có lỗi hoặc không có dữ liệu
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<Guid?> CreateInvoice(object invoiceJson)
+        {
+            try
+            {               
+                // Gọi stored procedure getUserByUsername từ Supabase               
+                var response = await _supabaseClient
+               .Rpc(StoreProcedureSupabase.CreateInvoices, new Dictionary<string, object>
+               {
+                    { "input", invoiceJson }
+               });
+                // Kiểm tra mã trạng thái của phản hồi
+                if (response.ResponseMessage?.IsSuccessStatusCode == true)
+                {
+                    // Nếu phản hồi thành công, lấy dữ liệu từ Content
+
+                    var raw = response.Content.Trim('"'); // ← Bỏ dấu ngoặc kép
+                    if (Guid.TryParse(raw, out var parsedGuid))
+                    {
+                        return parsedGuid;
+                    }
+                }
+                else
+                {
+                    // Nếu không thành công, in ra thông báo lỗi
+                    return null;
+                }
+                // Nếu có lỗi hoặc không có dữ liệu
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public DateTime? convertDateTimeToNull(DateTime? dateTime)
+        {
+            DateTime? converter = null;
+            if (dateTime.HasValue)
+            {
+                converter = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day);
+            }
+            return converter;
+        }
+        public async Task<List<SP_BestSellingProductResponse>> GetBestSellingProduct(DateTime? dateFrom, DateTime? dateEnd, int top)
+        {
+            try
+            {
+                DateTime? dateF= dateFrom ?? null;
+                // Gọi stored procedure getUserByUsername từ Supabase
+                var response = await _supabaseClient
+                .Rpc(StoreProcedureSupabase.GetBestSellingProducts, new Dictionary<string, object>
+                {
+                    { "start_date", convertDateTimeToNull(dateFrom) ?? null },
+                    { "end_date", convertDateTimeToNull(dateEnd)?? null },
+                    { "top_limit", top }
+                });
+
+                // Kiểm tra mã trạng thái của phản hồi
+                if (response.ResponseMessage?.IsSuccessStatusCode == true)
+                {
+                    // Nếu phản hồi thành công, lấy dữ liệu từ Content
+                    if (response.Content != null || response.Content != "[]")
+                    {
+                        // Giả sử Content là JSON, hãy deserialize nó thành kiểu User
+                        //var user = JsonConvert.DeserializeObject<User>(response.Content);
+                        List<SP_BestSellingProductResponse>? result = JsonConvert.DeserializeObject<List<SP_BestSellingProductResponse>>(response.Content);
+                        if (result?.Count > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+                else
+                {
+                    // Nếu không thành công, in ra thông báo lỗi
+                    return null;
+                }
+                // Nếu có lỗi hoặc không có dữ liệu
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+       
     }
 }

@@ -7,7 +7,7 @@ using System;
 namespace WebAPISalesManagement.Models
 {
     [Table("products")]
-    public class ProductsModel: BaseModel
+    public class ProductsModel : BaseModel
     {
         [PrimaryKey("id", false)]
         public Guid Product_Id { get; set; }

@@ -64,6 +64,115 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WebAPISalesManagement.Controllers.DiscountController",
+    "Method": "ActiveDiscountAsync",
+    "RelativePath": "Discount/ActiveDiscount",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "discountId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.DiscountController",
+    "Method": "ExtendDiscountAsync",
+    "RelativePath": "Discount/ExtendDiscount",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newDateEnd",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "discountId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.DiscountController",
+    "Method": "GetDiscountItem",
+    "RelativePath": "Discount/GetDiscountItem",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "discountId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.DiscountController",
+    "Method": "GetDiscountList",
+    "RelativePath": "Discount/GetDiscountList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "typeDiscount",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "isPaging",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "dateStart",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "dateEnd",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "valid",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WebAPISalesManagement.Controllers.FileUploadController",
     "Method": "GetFileByFolder",
     "RelativePath": "GetFileByFolder",
@@ -75,6 +184,126 @@
         "Name": "folderName",
         "Type": "System.String",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.InvoicesController",
+    "Method": "CreateInvoice",
+    "RelativePath": "Invoices/CreateInvoice",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WebAPISalesManagement.ModelResquests.InvoiceRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.InvoicesController",
+    "Method": "GetInvoiceById",
+    "RelativePath": "Invoices/GetInvoiceById",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idInvoice",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.InvoicesController",
+    "Method": "GetInvoiceList",
+    "RelativePath": "Invoices/GetInvoiceList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "isPaging",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "isDecPrice",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "userCreater",
+        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "dateStart",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "dateEnd",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "status",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.InvoicesController",
+    "Method": "GetProductByInvoice",
+    "RelativePath": "Invoices/GetProductByInvoice",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idInvoice",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.InvoicesController",
+    "Method": "PaymentInvoice",
+    "RelativePath": "Invoices/PaymentInvoice",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WebAPISalesManagement.ModelResquests.InvoicePaymentRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -265,6 +494,27 @@
   },
   {
     "ContainingType": "WebAPISalesManagement.Controllers.ProductController",
+    "Method": "UpdateProduct",
+    "RelativePath": "Product/UpdateProduct",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "productId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "productResquest",
+        "Type": "WebAPISalesManagement.ModelResquests.ProductResquest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ProductController",
     "Method": "UpdateProductImgURL",
     "RelativePath": "Product/UpdateProductImgURL",
     "HttpMethod": "POST",
@@ -279,6 +529,53 @@
       {
         "Name": "urlImg",
         "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ReportController",
+    "Method": "GetProductBestSaler",
+    "RelativePath": "Report/GetProductBestSaler",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dateFrom",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "dateEnd",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "top",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ReportController",
+    "Method": "GetRevenueReportAsync",
+    "RelativePath": "Report/GetRevenueReportAsync",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dateFrom",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "dateEnd",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
@@ -319,7 +616,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "folderName",
+        "Name": "IdProduct",
         "Type": "System.String",
         "IsRequired": false
       },

@@ -6,6 +6,7 @@ using WebAPISalesManagement.ModelResquests;
 using WebAPISalesManagement.Models;
 using WebAPISalesManagement.Services.Categories;
 using WebAPISalesManagement.Services.FileUpload;
+using WebAPISalesManagement.Services.SupabaseClient;
 using WebAPISalesManagement.Swagger;
 
 namespace WebAPISalesManagement.Services.Products
@@ -15,11 +16,13 @@ namespace WebAPISalesManagement.Services.Products
         private readonly Supabase.Client _clientSupabase;
         private readonly ICategoryServices _categoryServices;
         private readonly IFileUploadService _fileUploadService;
-        public ProductServices(Supabase.Client clientSupabase, ICategoryServices categoryServices, IFileUploadService fileUploadService)
+        private readonly ISupabaseClientService _supabaseClientService;
+        public ProductServices(ISupabaseClientService supabaseClientService,Supabase.Client clientSupabase, ICategoryServices categoryServices, IFileUploadService fileUploadService)
         {
             _clientSupabase = clientSupabase;
             _categoryServices = categoryServices;
             _fileUploadService = fileUploadService;
+            _supabaseClientService = supabaseClientService;
         }
         public async Task<ProductResponse> GetProductById(Guid productId)
         {
@@ -135,9 +138,9 @@ namespace WebAPISalesManagement.Services.Products
                 {
                     if (!string.IsNullOrEmpty(pro.Product_ImgURL))
                     {
-                        ModelResponse result = await _fileUploadService.DeleteFilesInFolderAsync(pro.Product_ImgURL);
-                        if (result.IsValid)
-                        {  
+                        SP_DeleteAllFileInFolderResponse sP_DeleteAllFileInFolderResponse = await _supabaseClientService.DeleteAllFileInFolder(pro.Product_Id.ToString());
+                        if (sP_DeleteAllFileInFolderResponse.AllDeleted)
+                        {                                                    
                             response.ValidationMessages.Add("Delete Product And File Success!");
                         }
                         else
@@ -159,11 +162,11 @@ namespace WebAPISalesManagement.Services.Products
         }
         public async Task<ModelDataPageResponse<List<ProductResponse>>> GetProductAsync(string search, List<string> category, int PageNumber, int PageSize, bool isPaging, bool isDescendPrice)
         {
-            // Lấy danh sách MenuItems từ Supabase
+            // Lấy danh sách Sản phẩm từ Supabase
             ModeledResponse<ProductsModel> SupabaseResponseMenuItems = await _clientSupabase.From<ProductsModel>().Get();
             List<ProductsModel> SupabaseListMenuItems = SupabaseResponseMenuItems.Models.ToList();
 
-            // Tìm kiếm theo tên món ăn (nếu có)
+            // Tìm kiếm theo tên (nếu có)
             if (!string.IsNullOrWhiteSpace(search))
             {
                 StringConvert conv = new StringConvert();
@@ -208,6 +211,46 @@ namespace WebAPISalesManagement.Services.Products
             productResponse = isPaging ? productResponse.Skip((result.currentPage - 1) * result.pageSize).Take(result.pageSize).ToList() : productResponse;
             result.items = productResponse;
             return result;
+        }
+        public async Task<ModelResponse> UpdateProduct(Guid guid, ProductResquest product)
+        {
+            ModelResponse modelResponse = new ModelResponse();
+            if (guid != Guid.Empty && product.ProductCategory != Guid.Empty)
+            {
+                CategoryResponse category = await _categoryServices.GetCategoryByIdAsync(product.ProductCategory);
+                if (category != null)
+                {
+                    ModeledResponse<ProductsModel> updateResponse = await _clientSupabase
+                                .From<ProductsModel>()
+                                .Where(x => x.Product_Id == guid)
+                                .Set(x => x.Product_Des, product.ProductDes)
+                                .Set(x => x.Product_Price, product.ProductPrice)
+                                .Set(x => x.Product_Status, product.ProductStatus)
+                                .Set(x => x.Product_Category, product.ProductCategory)
+                                .Set(x => x.Product_Name, product.ProductName)
+                                .Update();
+                    if (updateResponse == null || updateResponse.Models.Count <= 0)
+                    {
+                        modelResponse.IsValid = false;
+                        modelResponse.ValidationMessages.Add("Update Errors. Product is empty");
+                    }
+                    else
+                    {
+                        modelResponse.IsValid = true;
+                        modelResponse.ValidationMessages.Add("Update Success!");
+                    }
+                }
+                else {
+                    modelResponse.IsValid = false;
+                    modelResponse.ValidationMessages.Add("Category is empty");
+                }
+            }
+            else
+            {
+                modelResponse.IsValid = false;
+                modelResponse.ValidationMessages.Add("Product ID is empty");
+            }
+            return modelResponse;
         }
 
     }

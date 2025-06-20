@@ -81,6 +81,7 @@ namespace WebAPISalesManagement.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
         /// <summary>
         /// Xóa sản phẩm
         /// </summary>
@@ -99,7 +100,26 @@ namespace WebAPISalesManagement.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Update Infomation Product
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="productResquest"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateProduct")]
+        public async Task<ActionResult> UpdateProduct(string productId,[FromBody] ProductResquest productResquest)
+        {
+            try
+            {
+                //Gu id = Guid.Parse(requestId);
+                ModelResponse result = await _productServices.UpdateProduct(Guid.Parse(productId), productResquest);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /// <summary>
         /// Thay đổi địa chỉ hình ảnh sản phẩm
         /// </summary>

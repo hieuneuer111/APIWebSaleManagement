@@ -26,22 +26,23 @@ namespace WebAPISalesManagement.Controllers
         /// <returns></returns>
         // API endpoint để upload file
         [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadFileAsync(string folderName, IFormFile file, bool IsUpdateUrlImgToProduct = true)
+        public async Task<IActionResult> UploadFileAsync(string IdProduct, IFormFile file, bool IsUpdateUrlImgToProduct = true)
         {
             if (file == null || file.Length == 0 )
             {
                 return BadRequest(new {  Message = "No file uploaded.!" });
             }
-            if (string.IsNullOrWhiteSpace(folderName))
+            if (string.IsNullOrWhiteSpace(IdProduct))
             {
                 return BadRequest(new { Message = "No Folder uploaded.!" });
             }
             try
             {
+                string uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
                 //var bucketName = "salesmanagementproduct"; // Đặt tên bucket của bạn ở đây
-                var fileName = file.FileName; // Sử dụng tên file gốc, có thể thay đổi nếu cần
+                //var fileName = file.FileName; // Sử dụng tên file gốc, có thể thay đổi nếu cần
                 // Gọi service upload file
-                var fileUrl = await _fileUploadService.UploadFileAsync(file, folderName, fileName, IsUpdateUrlImgToProduct);
+                var fileUrl = await _fileUploadService.UploadFileAsync(file, IdProduct, uniqueFileName, IsUpdateUrlImgToProduct);
                 return Ok(new { FileUrl = fileUrl, Message ="Upload Success!" });
             }
             catch (Exception ex)
@@ -51,7 +52,7 @@ namespace WebAPISalesManagement.Controllers
         }
 
         /// <summary>
-        /// Update file
+        /// Update file To Storage Supabase
         /// </summary>
         /// <param name="folderName"></param>
         /// <param name="file"></param>
@@ -71,10 +72,10 @@ namespace WebAPISalesManagement.Controllers
             try
             {
                 //var bucketName = "salesmanagementproduct"; // Đặt tên bucket của bạn ở đây
-                var fileName = file.FileName; // Sử dụng tên file gốc, có thể thay đổi nếu cần
+                //string uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}"; // Sử dụng tên file gốc, có thể thay đổi nếu cần
                 // Gọi service upload file
-                var fileUrl = await _fileUploadService.UploadFileAsync(file, folderName, fileName, IsUpdateUrlImgToProduct);
-                return Ok(new { FileUrl = fileUrl, Message = "Update Success!" });
+                ModelResponse fileUrl = await _fileUploadService.UpdateFileByFolder(folderName, file);
+                return Ok(fileUrl);
             }
             catch (Exception ex)
             {
@@ -101,8 +102,9 @@ namespace WebAPISalesManagement.Controllers
             }
         }
         /// <summary>
-        /// Xóa tất cả file trong folder SUPABASE 
+        /// Xóa 1 file trong folder SUPABASE dựa vào URL Image
         /// </summary>
+        /// <param name="urlImgDelete"></param>
         /// <param name="folderName"></param>
         /// <returns></returns>
         [HttpDelete("DeleteFolder")]
