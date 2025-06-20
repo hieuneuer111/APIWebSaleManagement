@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAPISalesManagement</name>
+    </assembly>
+    <members>
+        <member name="M:WebAPISalesManagement.Controllers.AuthorizationController.LoginJWTAsync(WebAPISalesManagement.ModelRequests.LoginSupabaseRequest)">
+            <summary>
+            Đăng nhập lấy token JWT
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.AuthorizationController.RegisterAuthorizationJWT(WebAPISalesManagement.ModelRequests.UserRegisterResquest)">
+            <summary>
+            Đăng kí tài khoản bắt buộc có email
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.DiscountController.GetDiscountList(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32)">
+            <summary>
+            TypeDiscount Nếu = 1 thì lọc tất cả Giảm giá theo % "Percentage", = 2 thì theo giá tiền "FixedAmount", valid == 1 mã còn hạn, 2 hết hạn, null lấy all
+            </summary>
+            <param name="search"></param>
+            <param name="typeDiscount"></param>
+            <param name="PageNumber"></param>
+            <param name="PageSize"></param>
+            <param name="isPaging"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.DiscountController.GetDiscountItem(System.String)">
+            <summary>
+            Lấy chi tiết discount
+            </summary>
+            <param name="discountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.DiscountController.ExtendDiscountAsync(System.DateTime,System.String)">
+            <summary>
+            Gia hạn mã giảm giá
+            </summary>
+            <param name="newDateEnd"></param>
+            <param name="discountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.DiscountController.ActiveDiscountAsync(System.Boolean,System.String)">
+            <summary>
+            Hủy hoặc kích hoạt mã giảm giá
+            </summary>
+            <param name="active"></param>
+            <param name="discountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.UploadFileAsync(System.String,Microsoft.AspNetCore.Http.IFormFile,System.Boolean)">
+            <summary>
+            Upload File To Storage Supabase
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.UpdateFile(System.String,Microsoft.AspNetCore.Http.IFormFile,System.Boolean)">
+            <summary>
+            Update file To Storage Supabase
+            </summary>
+            <param name="folderName"></param>
+            <param name="file"></param>
+            <param name="IsUpdateUrlImgToProduct"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.GetFileByFolder(System.String)">
+            <summary>
+            Get files in folder Supabase
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.DeleteFolderAsync(System.String)">
+            <summary>
+            Xóa 1 file trong folder SUPABASE dựa vào URL Image
+            </summary>
+            <param name="urlImgDelete"></param>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.FileUploadController.DeleteAllFileFolder(System.String)">
+            <summary>
+            Delete all folder using store produce
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.InvoicesController.GetProductByInvoice(System.String)">
+            <summary>
+            Get Product List By Invoice
+            </summary>
+            <param name="idInvoice"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.InvoicesController.GetInvoiceById(System.String)">
+            <summary>
+            Lấy chi tiết hóa đơn dựa vào id
+            </summary>
+            <param name="idInvoice"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.InvoicesController.GetInvoiceList(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32)">
+            <summary>
+            Lấy ds Hóa đơn 
+            Mặc định dateStart và dateEnd null lọc all
+            nếu dateStart tồn tại thì lọc từ dateStart tới Nay
+            Nếu dateEnd tồn tại thì lọc từ trước tới dateEnd
+            </summary>
+            <param name="search"></param>
+            <param name="PageNumber"></param>
+            <param name="PageSize"></param>
+            <param name="isPaging"></param>
+            <param name="isDecPrice"></param>
+            <param name="userCreater"></param>
+            <param name="dateStart"></param>
+            <param name="dateEnd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.InvoicesController.CreateInvoice(WebAPISalesManagement.ModelResquests.InvoiceRequest)">
+            <summary>
+            Hàm tạo hóa đơn có rollback bằng store nếu lỗi
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.InvoicesController.PaymentInvoice(WebAPISalesManagement.ModelResquests.InvoicePaymentRequest)">
+            <summary>
+            Thanh toán hóa đơn
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetProduct(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})">
+            <summary>
+            Get All Product Return List
+            </summary>
+            <param name="search"></param>
+            <param name="PageNumber"></param>
+            <param name="PageSize"></param>
+            <param name="isPaging"></param>
+            <param name="isDecPrice"></param>
+            <param name="categoryItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetProductById(System.String)">
+            <summary>
+            Lấy product dựa vào product id
+            </summary>
+            <param name="requestId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.AddProduct(WebAPISalesManagement.ModelResquests.ProductResquest)">
+            <summary>
+            Thêm sản phẩm
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.DeleteProduct(System.String)">
+            <summary>
+            Xóa sản phẩm
+            </summary>
+            <param name="productId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.UpdateProduct(System.String,WebAPISalesManagement.ModelResquests.ProductResquest)">
+            <summary>
+            Update Infomation Product
+            </summary>
+            <param name="productId"></param>
+            <param name="productResquest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.UpdateProductImgURL(System.String,System.String)">
+            <summary>
+            Thay đổi địa chỉ hình ảnh sản phẩm
+            </summary>
+            <param name="productId"></param>
+            <param name="urlImg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetCategoriesAsync(System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Láy ds danh mục sản phẩm
+            </summary>
+            <param name="search"></param>
+            <param name="PageNumber"></param>
+            <param name="PageSize"></param>
+            <param name="isPaging"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.UpdateCategoryItems(WebAPISalesManagement.ModelResponses.CategoryResponse)">
+            <summary>
+            Chỉnh sửa dm sản phẩm
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.AddCategoryItems(WebAPISalesManagement.ModelResquests.CategoryResquest)">
+            <summary>
+            Thêm dm sản phẩm
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.DeleteCategoryItems(System.String)">
+            <summary>
+            Xóa dm sản phẩm
+            </summary>
+            <param name="categoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ProductController.GetDetailCategory(System.String)">
+            <summary>
+            Lấy chi tiết dm sản phẩm theo id
+            </summary>
+            <param name="categoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ReportController.GetProductBestSaler(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32)">
+            <summary>
+            Lấy ds sản phâm bán chạy trong khoảng thời gian
+            </summary>
+            <param name="dateFrom"></param>
+            <param name="dateEnd"></param>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ReportController.GetRevenueReportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Thống kê doanh thu theo thời gian Tổng tiền gốc (total_amount), Tổng giảm giá (discount_value), Tổng tiền thực thu (final_total)
+            </summary>
+            <param name="dateFrom"></param>
+            <param name="dateEnd"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
