@@ -31,6 +31,8 @@ using WebAPISalesManagement.Services.FileUpload;
 using WebAPISalesManagement.Services.Invoices;
 using WebAPISalesManagement.Services.Discounts;
 using WebAPISalesManagement.Services.Reports;
+using WebAPISalesManagement.Services.Toppings;
+using WebAPISalesManagement.Services;
 
 namespace WebAPISalesManagement
 {
@@ -131,6 +133,7 @@ namespace WebAPISalesManagement
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IDiscountServices, DiscountServices>();
             services.AddScoped<IReportServices, ReportServices>();
+            services.AddScoped<IToppingService, ToppingService>();
             #endregion
             // Add services to the container.
 

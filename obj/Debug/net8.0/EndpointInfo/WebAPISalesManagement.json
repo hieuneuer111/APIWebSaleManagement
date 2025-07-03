@@ -1133,6 +1133,146 @@
         }
       }
     },
+    "/api/Topping/active": {
+      "get": {
+        "tags": [
+          "Topping"
+        ],
+        "summary": "Lấy danh sách tất cả topping đang hoạt động",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Topping": {
+      "get": {
+        "tags": [
+          "Topping"
+        ],
+        "summary": "Lấy tất cả topping (bao gồm đã bị ẩn)",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Topping"
+        ],
+        "summary": "Thêm mới topping",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToppingRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToppingRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToppingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Topping/{id}": {
+      "get": {
+        "tags": [
+          "Topping"
+        ],
+        "summary": "Lấy chi tiết topping theo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Topping"
+        ],
+        "summary": "Cập nhật topping",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToppingRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToppingRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToppingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Topping"
+        ],
+        "summary": "Xóa mềm topping (ẩn topping khỏi danh sách)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -1222,6 +1362,13 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "toppings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceToppingRequest"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1265,6 +1412,20 @@
         },
         "additionalProperties": false
       },
+      "InvoiceToppingRequest": {
+        "type": "object",
+        "properties": {
+          "toppingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginSupabaseRequest": {
         "type": "object",
         "properties": {
@@ -1300,6 +1461,25 @@
           "productCategory": {
             "type": "string",
             "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToppingRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "price": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

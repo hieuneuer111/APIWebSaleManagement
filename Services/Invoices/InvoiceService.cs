@@ -158,14 +158,13 @@ namespace WebAPISalesManagement.Services.Invoices
         public async Task<ModelDataResponse<Guid?>> CreateInvoiceAsync(InvoiceRequest request)
         {
             var result = new ModelDataResponse<Guid?>();
-            var invoiceId = Guid.NewGuid();
             var invoiceItems = new List<Dictionary<string, object>>();
-            long totalAmount = 0;
-            long discountTotal = 0;
+            long totalAmount = 0;     // Tổng tiền gốc (sản phẩm + topping)
+            long discountTotal = 0;   // Tổng giảm giá từng item
 
-            // 1. Tính tổng sản phẩm
             foreach (var item in request.Items)
             {
+                // 1. Lấy thông tin sản phẩm
                 var product = await _clientSupabase
                     .From<ProductsModel>()
                     .Where(p => p.Product_Id == item.ProductId)
@@ -180,8 +179,9 @@ namespace WebAPISalesManagement.Services.Invoices
 
                 long unitPrice = product.Product_Price;
                 int quantity = item.Quantity;
-                long lineTotal = unitPrice * quantity;
+                long lineTotal = unitPrice * quantity; // Giá gốc (chưa giảm)
 
+                // 2. Áp dụng giảm giá sản phẩm nếu có
                 long discountValue = 0;
                 string? discountSnapshotName = null, discountType = null, discountRawValue = null;
                 Guid? discountId = null;
@@ -193,7 +193,7 @@ namespace WebAPISalesManagement.Services.Invoices
                         .Where(d => d.Id == item.DiscountId.Value)
                         .Single();
 
-                    var (isValid, message) = await DiscountHelper.ValidateDiscountAsync(discount, totalAmount);
+                    var (isValid, message) = await DiscountHelper.ValidateDiscountAsync(discount, lineTotal);
                     if (!isValid)
                     {
                         result.IsValid = false;
@@ -215,27 +215,69 @@ namespace WebAPISalesManagement.Services.Invoices
                     discountValue = Math.Min(discountValue, lineTotal);
                 }
 
-                long totalPrice = lineTotal - discountValue;
+                // 3. Tính tổng tiền topping
+                long toppingTotal = 0;
+                var toppingList = new List<Dictionary<string, object>>();
 
-                invoiceItems.Add(new Dictionary<string, object>
+                if (item.Toppings != null && item.Toppings.Any())
                 {
-                    { "product_id", item.ProductId },
-                    { "quantity", quantity },
-                    { "unit_price", (int)unitPrice },
-                    { "line_total", (int)lineTotal },
-                    { "discount_id", discountId?.ToString() ?? "" },
-                    { "discount_snapshot_name", discountSnapshotName },
-                    { "discount_type", discountType },
-                    { "discount_raw_value", discountRawValue },
-                    { "discount_value", (int)discountValue },
-                    { "total_price", (int)totalPrice }
-                });
+                    foreach (var topping in item.Toppings)
+                    {
+                        var toppingModel = await _clientSupabase
+                            .From<ToppingModel>()
+                            .Where(t => t.Id == topping.ToppingId)
+                            .Single();
 
-                totalAmount += lineTotal;
-                discountTotal += discountValue;
+                        if (toppingModel == null)
+                        {
+                            result.IsValid = false;
+                            result.ValidationMessages.Add($"Topping {topping.ToppingId} không tồn tại.");
+                            return result;
+                        }
+
+                        long toppingAmount = toppingModel.Price * topping.Quantity;
+                        toppingTotal += toppingAmount;
+
+                        toppingList.Add(new Dictionary<string, object>
+                {
+                    { "topping_id", toppingModel.Id },
+                    { "topping_name", toppingModel.Name },
+                    { "topping_price", toppingModel.Price },
+                    { "quantity", topping.Quantity },
+                    { "total", toppingAmount }
+                });
+                    }
+                }
+
+                // 4. Tổng tiền thực tế cho item = (giá gốc - giảm giá) + topping
+                long totalPrice = (lineTotal - discountValue) + toppingTotal;
+
+                // 5. Tạo dữ liệu item hóa đơn
+                var invoiceItem = new Dictionary<string, object>
+        {
+            { "product_id", item.ProductId },
+            { "quantity", quantity },
+            { "unit_price", (int)unitPrice },
+            { "line_total", (int)lineTotal },
+            { "discount_id", discountId?.ToString() ?? "" },
+            { "discount_snapshot_name", discountSnapshotName },
+            { "discount_type", discountType },
+            { "discount_raw_value", discountRawValue },
+            { "discount_value", (int)discountValue },
+            { "total_price", (int)totalPrice }
+        };
+
+                if (toppingList.Count > 0)
+                {
+                    invoiceItem.Add("toppings", toppingList);
+                }
+
+                invoiceItems.Add(invoiceItem);
+                totalAmount += totalPrice;      // ✅ Cộng vào tổng tiền hóa đơn
+                discountTotal += discountValue; // ✅ Cộng vào tổng giảm giá
             }
 
-            // 2. Giảm giá toàn hóa đơn (nếu có)
+            // 6. Áp dụng giảm giá toàn hóa đơn (nếu có)
             long invoiceDiscountValue = 0;
             string? invoiceDiscountName = null, invoiceDiscountType = null, invoiceDiscountRawValue = null;
             Guid? invoiceDiscountId = request.DiscountId;
@@ -270,21 +312,22 @@ namespace WebAPISalesManagement.Services.Invoices
 
             long finalTotal = totalAmount - invoiceDiscountValue;
 
-            // 3. Gửi dữ liệu sang store procedure
+            // 7. Chuẩn bị dữ liệu gửi vào store procedure
             var invoiceJson = new Dictionary<string, object>
-            {
-                { "invoice_creater", request.InvoiceCreater.ToString() },
-                { "status", request.Status },
-                { "total_amount", totalAmount },
-                { "discount_value", invoiceDiscountValue },
-                { "final_total", finalTotal },
-                { "discount_id", invoiceDiscountId?.ToString() ?? "" },
-                { "discount_snapshot_name", invoiceDiscountName },
-                { "discount_type", invoiceDiscountType },
-                { "discount_raw_value", invoiceDiscountRawValue },
-                { "items", invoiceItems }
-            };
+    {
+        { "invoice_creater", request.InvoiceCreater.ToString() },
+        { "status", request.Status },
+        { "total_amount", totalAmount },
+        { "discount_value", invoiceDiscountValue },
+        { "final_total", finalTotal },
+        { "discount_id", invoiceDiscountId?.ToString() ?? "" },
+        { "discount_snapshot_name", invoiceDiscountName },
+        { "discount_type", invoiceDiscountType },
+        { "discount_raw_value", invoiceDiscountRawValue },
+        { "items", invoiceItems }
+    };
 
+            // 8. Gọi Supabase store để tạo hóa đơn
             Guid? guidNewInvoice = await _supabaseClientService.CreateInvoice(invoiceJson);
 
             if (guidNewInvoice != Guid.Empty && guidNewInvoice.HasValue)
@@ -300,6 +343,7 @@ namespace WebAPISalesManagement.Services.Invoices
 
             return result;
         }
+
 
         public async Task<ModelResponse> PayInvoiceAsync(InvoicePaymentRequest request)
         {
