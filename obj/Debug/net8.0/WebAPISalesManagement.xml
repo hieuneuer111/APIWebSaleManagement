@@ -18,6 +18,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:WebAPISalesManagement.Controllers.AuthorizationController.ReloadByRefreshToken(WebAPISalesManagement.ModelResquests.RefreshTokenRequest)">
+            <summary>
+            Reload Auto login by Refresh Token
+            </summary>
+            <param name="refreshToken"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPISalesManagement.Controllers.DiscountController.GetDiscountList(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32)">
             <summary>
             TypeDiscount Nếu = 1 thì lọc tất cả Giảm giá theo % "Percentage", = 2 thì theo giá tiền "FixedAmount", valid == 1 mã còn hạn, 2 hết hạn, null lấy all

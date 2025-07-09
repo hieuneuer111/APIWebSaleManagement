@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Supabase.Gotrue;
 using WebAPISalesManagement.ModelResponses;
+using WebAPISalesManagement.ModelResquests;
 using WebAPISalesManagement.Models;
 using WebAPISalesManagement.Swagger;
 
@@ -60,5 +61,23 @@ namespace WebAPISalesManagement.Controllers
             }
         }
         //
+        /// <summary>
+        /// Reload Auto login by Refresh Token
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
+        [HttpPost("ReloadByRefreshToken")]
+        public async Task<ActionResult> ReloadByRefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            try
+            {
+                Response<SupabaseResponse> result = await _authorizationService.ReloadByRefreshToken(request.RefreshToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

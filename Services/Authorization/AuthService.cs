@@ -22,6 +22,8 @@ using WebAPISalesManagement.Services.SupabaseClient;
 using WebAPISalesManagement.Settings;
 using WebAPISalesManagement.Swagger;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Configuration;
+using Supabase.Storage;
 
 
 namespace WebAPISalesManagement.Services.Authorization
@@ -31,16 +33,16 @@ namespace WebAPISalesManagement.Services.Authorization
         private readonly ISupabaseClientService _supabaseClientService;
         private readonly IRoleServices _roleServices;
         private readonly Supabase.Client _supabaseClient;
-       
+        private readonly IConfigService _configuration;
         private readonly WebAPISalesManagement.Services.Configuration.IConfigService  _configurationService;
-        public AuthService(ISupabaseClientService supabaseClientService, WebAPISalesManagement.Services.Configuration.IConfigService configurationService, Supabase.Client supabaseClient, IRoleServices roleServices)
+        public AuthService(IConfigService configuration,ISupabaseClientService supabaseClientService, WebAPISalesManagement.Services.Configuration.IConfigService configurationService, Supabase.Client supabaseClient, IRoleServices roleServices)
         {
         
             _supabaseClientService = supabaseClientService;
             _configurationService = configurationService;
             _supabaseClient = supabaseClient ?? throw new ArgumentNullException(nameof(supabaseClient)); ;
             _roleServices = roleServices;
-           
+            _configuration = configuration;
 
         }
         // Đăng nhập vào Supabase bằng email và password
@@ -111,7 +113,7 @@ namespace WebAPISalesManagement.Services.Authorization
             result.Succeeded = true;
             result.Errors = [];
             result.Message = "Login Success!";
-            result.Data = account;
+            result.Data = account;       
             return result;
         }
         public async Task<Response<SupabaseUserResponse>> Register(UserRegisterResquest userLogin)
@@ -176,9 +178,70 @@ namespace WebAPISalesManagement.Services.Authorization
             }
         }
 
-        public Task<Response<SupabaseResponse>> ReloadByRefreshToken(string refreshToken)
+        public async Task<Response<SupabaseResponse>> ReloadByRefreshToken(string refreshToken)
         {
-            throw new NotImplementedException();
+            using var client = new HttpClient();
+
+            // Add API key to headers (anon or service_role)
+            client.DefaultRequestHeaders.Add("apikey",  _configuration.GetJWT().SUPABASE_KEY);
+
+            // JSON body
+            var jsonBody = new
+            {               
+                refresh_token = refreshToken
+            };
+
+            // Serialize to JSON string with correct Content-Type
+            var content = new StringContent(
+                JsonConvert.SerializeObject(jsonBody),
+                Encoding.UTF8,
+                "application/json"
+            );
+            //SUPABASE_URL
+            // Post to Supabase token endpoint
+            var response = await client.PostAsync($"{_configuration.GetJWT().SUPABASE_URL}/auth/v1/token?grant_type=refresh_token", content);
+            var json = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {               
+                return new Response<SupabaseResponse>
+                {
+                    Data = null,
+                    Succeeded = false,
+                    Message = "Refresh token failed",
+                    Errors = [json]
+                };
+            }
+            else
+            {
+                SupabaseResponse userInfo = new SupabaseResponse();
+                dynamic tokenData = JsonConvert.DeserializeObject(json);
+                //RolesResponse roleUser = await _roleServices.GetRolesByIDAsync(tokenData.user.id);
+
+                UserResponse user = await GetUserInfoById(Guid.Parse((string)tokenData.user.id));
+                SP_GetUserByUNameResponse userRoles = await _supabaseClientService.GetUserByUsernameAsync(user.User_Name);
+                RolesResponse roleUser = await _roleServices.GetRolesByIDAsync(userRoles.rolesUser);
+                List<SP_GetRightByUidRightIdResponse> rights_SP = await _supabaseClientService.GetRightByUIdAsync(Guid.Parse((string)tokenData.user.id));
+                userInfo = new SupabaseResponse
+                {
+                    AccessToken = tokenData.access_token,
+                    RefreshToken = tokenData.refresh_token,
+                    ExpiresIn = tokenData.expires_in,
+                    User = new SupabaseUserResponse
+                    {
+                        Id = Guid.Parse((string)tokenData.user.id),
+                        Email = tokenData.user.email,
+                        Role = roleUser,
+                        Userrights = rights_SP
+                    },
+                };
+                return new Response<SupabaseResponse>
+                {
+                    Succeeded = true,
+                    Message = "Token refreshed successfully.",
+                    Data = userInfo
+                };
+            }        
         }
         public async Task<bool> VerifyEmailAsync(Guid idUser) {
             ModeledResponse<UsersModel> updateResponse = await _supabaseClient

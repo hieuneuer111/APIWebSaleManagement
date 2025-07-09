@@ -121,6 +121,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WebAPISalesManagement.Controllers.AuthorizationController",
+    "Method": "ReloadByRefreshToken",
+    "RelativePath": "Authorization/ReloadByRefreshToken",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WebAPISalesManagement.ModelResquests.RefreshTokenRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WebAPISalesManagement.Controllers.FileUploadController",
     "Method": "DeleteAllFileFolder",
     "RelativePath": "DeleteAllFileFolder",
