@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.Swagger;
 using WebAPISalesManagement.Services.SupabaseClient;
+using Microsoft.AspNetCore.Authorization;
 namespace WebAPISalesManagement.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
+    [Authorize]
     public class FileUploadController : ControllerBase
     {
         private readonly IFileUploadService _fileUploadService;

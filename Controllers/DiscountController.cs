@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.Services.Categories;
 using WebAPISalesManagement.Services.Discounts;
@@ -9,6 +10,7 @@ namespace WebAPISalesManagement.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class DiscountController : ControllerBase
     {
         private readonly IDiscountServices _discountServices;

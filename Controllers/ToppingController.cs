@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebAPISalesManagement.Helpers;
 using WebAPISalesManagement.ModelRequests;
 using WebAPISalesManagement.Services.Toppings;
 
 namespace WebAPISalesManagement.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
+    [Authorize]
+    [AuthorizeRight("manage_products")]
     public class ToppingController : ControllerBase
     {
         private readonly IToppingService _toppingService;

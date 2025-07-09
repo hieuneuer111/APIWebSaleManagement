@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebAPISalesManagement.Helpers;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.Services.Categories;
 using WebAPISalesManagement.Services.Products;
@@ -9,6 +11,8 @@ namespace WebAPISalesManagement.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
+    [AuthorizeRight("view_reports")]
     public class ReportController : ControllerBase
     {
         private readonly IReportServices _reportServices;

@@ -18,6 +18,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:WebAPISalesManagement.Controllers.AuthorizationController.ReloadByRefreshToken(WebAPISalesManagement.ModelResquests.RefreshTokenRequest)">
+            <summary>
+            Reload Auto login by Refresh Token
+            </summary>
+            <param name="refreshToken"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPISalesManagement.Controllers.DiscountController.GetDiscountList(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32)">
             <summary>
             TypeDiscount Nếu = 1 thì lọc tất cả Giảm giá theo % "Percentage", = 2 thì theo giá tiền "FixedAmount", valid == 1 mã còn hạn, 2 hết hạn, null lấy all
@@ -238,6 +245,66 @@
             <param name="dateFrom"></param>
             <param name="dateEnd"></param>
             <returns></returns>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ToppingController.GetAllActive">
+            <summary>
+            Lấy danh sách tất cả topping đang hoạt động
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ToppingController.GetAll">
+            <summary>
+            Lấy tất cả topping (bao gồm đã bị ẩn)
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ToppingController.GetById(System.String)">
+            <summary>
+            Lấy chi tiết topping theo ID
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ToppingController.Create(WebAPISalesManagement.ModelRequests.ToppingRequest)">
+            <summary>
+            Thêm mới topping
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ToppingController.Update(System.String,WebAPISalesManagement.ModelRequests.ToppingRequest)">
+            <summary>
+            Cập nhật topping
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Controllers.ToppingController.Delete(System.String)">
+            <summary>
+            Xóa mềm topping (ẩn topping khỏi danh sách)
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Services.Toppings.IToppingService.GetAllActiveToppingsAsync">
+            <summary>
+            Lấy tất cả topping đang active
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Services.Toppings.IToppingService.GetAllToppingsAsync">
+            <summary>
+            Lấy tất cả topping (kể cả đã bị ẩn)
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Services.Toppings.IToppingService.GetToppingByIdAsync(System.Guid)">
+            <summary>
+            Lấy topping theo ID
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Services.Toppings.IToppingService.AddToppingAsync(WebAPISalesManagement.ModelRequests.ToppingRequest)">
+            <summary>
+            Thêm topping mới
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Services.Toppings.IToppingService.UpdateToppingAsync(System.Guid,WebAPISalesManagement.ModelRequests.ToppingRequest)">
+            <summary>
+            Cập nhật topping
+            </summary>
+        </member>
+        <member name="M:WebAPISalesManagement.Services.Toppings.IToppingService.DeleteToppingAsync(System.Guid)">
+            <summary>
+            Xoá mềm topping
+            </summary>
         </member>
     </members>
 </doc>

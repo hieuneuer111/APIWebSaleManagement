@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebAPISalesManagement.Helpers;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.ModelResquests;
 using WebAPISalesManagement.Services.Categories;
@@ -10,6 +12,8 @@ namespace WebAPISalesManagement.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
+    [AuthorizeRight("create_order")]
     public class InvoicesController : ControllerBase
     {
         //[Authorize] // Đảm bảo rằng người dùng đã đăng nhập

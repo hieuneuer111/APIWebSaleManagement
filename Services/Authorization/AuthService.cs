@@ -24,6 +24,7 @@ using WebAPISalesManagement.Swagger;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.Extensions.Configuration;
 using Supabase.Storage;
+using System.Net.Http.Headers;
 
 
 namespace WebAPISalesManagement.Services.Authorization
@@ -51,7 +52,7 @@ namespace WebAPISalesManagement.Services.Authorization
             SupabaseResponse userInfo = new SupabaseResponse();
             try
             {
-                Supabase.Gotrue.Session responseAuth = await _supabaseClient.Auth.SignIn(email, password);
+                Supabase.Gotrue.Session responseAuth = await _supabaseClient.Auth.SignInWithPassword(email, password);
                 if (responseAuth != null)
                 {
                     await VerifyEmailAsync(Guid.Parse(responseAuth.User.Id));
@@ -113,7 +114,8 @@ namespace WebAPISalesManagement.Services.Authorization
             result.Succeeded = true;
             result.Errors = [];
             result.Message = "Login Success!";
-            result.Data = account;       
+            result.Data = account;
+            await UpdateUserRightsMetadataAsync(account.AccessToken, account.User.Userrights);
             return result;
         }
         public async Task<Response<SupabaseUserResponse>> Register(UserRegisterResquest userLogin)
@@ -235,6 +237,7 @@ namespace WebAPISalesManagement.Services.Authorization
                         Userrights = rights_SP
                     },
                 };
+                await UpdateUserRightsMetadataAsync(tokenData.access_token, rights_SP);
                 return new Response<SupabaseResponse>
                 {
                     Succeeded = true,
@@ -272,5 +275,33 @@ namespace WebAPISalesManagement.Services.Authorization
             }
             return userResponse;
         }
+        public async Task<bool> UpdateUserRightsMetadataAsync(string accessToken, List<SP_GetRightByUidRightIdResponse> rights)
+        {
+            using var client = new HttpClient();
+
+            // Thêm token vào header
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Add("apikey", _configuration.GetJWT().SUPABASE_KEY); // Supabase project API Key
+
+            // Tạo JSON body
+            var body = new
+            {
+                data = new
+                {
+                    userrights = rights // Gắn quyền vào metadata
+                }
+            };
+
+            var content = new StringContent(
+                JsonConvert.SerializeObject(body),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            // Gửi PUT để cập nhật metadata
+            var response = await client.PutAsync($"{_configuration.GetJWT().SUPABASE_URL}/auth/v1/user", content);
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }

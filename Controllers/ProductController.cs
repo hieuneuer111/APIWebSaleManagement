@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using WebAPISalesManagement.Helpers;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.ModelResquests;
 using WebAPISalesManagement.Services.Categories;
@@ -13,6 +14,8 @@ namespace WebAPISalesManagement.Controllers
     //[Authorize] // Đảm bảo rằng người dùng đã đăng nhập
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
+    [AuthorizeRight("manage_products")]
     public class ProductController : ControllerBase
     {
         private readonly IProductServices _productServices;
@@ -148,6 +151,7 @@ namespace WebAPISalesManagement.Controllers
         /// <param name="PageSize"></param>
         /// <param name="isPaging"></param>
         /// <returns></returns>
+        
         [HttpGet("GetCategories")]
         public async Task<ActionResult> GetCategoriesAsync(string search = "", int PageNumber = 1, int PageSize = 10, bool isPaging = false)
         {

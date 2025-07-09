@@ -1,94 +1,5 @@
 [
   {
-    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
-    "Method": "GetAll",
-    "RelativePath": "api/Topping",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
-    "Method": "Create",
-    "RelativePath": "api/Topping",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "WebAPISalesManagement.ModelRequests.ToppingRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
-    "Method": "GetById",
-    "RelativePath": "api/Topping/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
-    "Method": "Update",
-    "RelativePath": "api/Topping/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "request",
-        "Type": "WebAPISalesManagement.ModelRequests.ToppingRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
-    "Method": "Delete",
-    "RelativePath": "api/Topping/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
-    "Method": "GetAllActive",
-    "RelativePath": "api/Topping/active",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "WebAPISalesManagement.Controllers.AuthorizationController",
     "Method": "LoginJWTAsync",
     "RelativePath": "Authorization/LoginAuthorizationJWT",
@@ -684,6 +595,95 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
+    "Method": "GetAll",
+    "RelativePath": "Topping",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
+    "Method": "Create",
+    "RelativePath": "Topping",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WebAPISalesManagement.ModelRequests.ToppingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
+    "Method": "GetById",
+    "RelativePath": "Topping/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
+    "Method": "Update",
+    "RelativePath": "Topping/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "WebAPISalesManagement.ModelRequests.ToppingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
+    "Method": "Delete",
+    "RelativePath": "Topping/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPISalesManagement.Controllers.ToppingController",
+    "Method": "GetAllActive",
+    "RelativePath": "Topping/active",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

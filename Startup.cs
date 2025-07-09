@@ -33,6 +33,7 @@ using WebAPISalesManagement.Services.Discounts;
 using WebAPISalesManagement.Services.Reports;
 using WebAPISalesManagement.Services.Toppings;
 using WebAPISalesManagement.Services;
+using WebAPISalesManagement.Helpers;
 
 namespace WebAPISalesManagement
 {
@@ -52,7 +53,7 @@ namespace WebAPISalesManagement
             services.AddHangfire(x => x.UseMemoryStorage());
             services.AddHangfireServer();
             //Configuration from AppSettings
-            services.Configure<JWT>(Configuration.GetSection("Authentication"));
+            //services.Configure<JWT>(Configuration.GetSection("Authentication"));
             //If using IIS
             services.Configure<IISServerOptions>(options =>
             {
@@ -77,15 +78,34 @@ namespace WebAPISalesManagement
             });
 
             // Cấu hình xác thực JWT
-            services.AddAuthentication()
-                .AddJwtBearer(options =>
+            //services.AddAuthentication()
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuerSigningKey = true,
+            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JWTSecret"])),
+            //            ValidIssuer = Configuration["Authentication:ValidIsuser"],
+            //            ValidAudience = Configuration["Authentication:ValidAudience"],
+            //        };
+            //    });
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        ValidateIssuer = true,
+                        ValidIssuer = "https://zsvylavugwlgqurzxugs.supabase.co/auth/v1",
+
+                        ValidateAudience = true,
+                        ValidAudience = "authenticated",
+
+                        ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JWTSecret"])),
-                        ValidIssuer = Configuration["Authentication:ValidIsuser"],
-                        ValidAudience = Configuration["Authentication:ValidAudience"],
+
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["Authentication:JWTSecret"])
+                        )
                     };
                 });
             services.AddAuthorization();
@@ -193,9 +213,9 @@ namespace WebAPISalesManagement
             // global cors policy
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-            app.UseAuthentication();
-
-            app.UseAuthorization();
+            app.UseMiddleware<JwtMetadataMiddleware>();
+            app.UseAuthentication();  // phải trước
+            app.UseAuthorization();   // phải sau
             app.Use(async (context, next) =>
             {
                 await next();

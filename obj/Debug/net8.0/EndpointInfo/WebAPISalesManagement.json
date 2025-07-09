@@ -1165,7 +1165,7 @@
         }
       }
     },
-    "/api/Topping/active": {
+    "/Topping/active": {
       "get": {
         "tags": [
           "Topping"
@@ -1178,7 +1178,7 @@
         }
       }
     },
-    "/api/Topping": {
+    "/Topping": {
       "get": {
         "tags": [
           "Topping"
@@ -1221,7 +1221,7 @@
         }
       }
     },
-    "/api/Topping/{id}": {
+    "/Topping/{id}": {
       "get": {
         "tags": [
           "Topping"
