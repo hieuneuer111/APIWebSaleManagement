@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Supabase.Gotrue;
+using Supabase.Interfaces;
 using WebAPISalesManagement.ModelResponses;
 using WebAPISalesManagement.ModelResquests;
 using WebAPISalesManagement.Models;
@@ -77,6 +78,25 @@ namespace WebAPISalesManagement.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Logout 
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _authorizationService.Logout();
+                // (Tuỳ chọn) Xoá refresh token lưu trong DB nếu bạn lưu
+                // await _refreshTokenService.DeleteAsync(userId);
+                return Ok(new { message = "Đăng xuất thành công." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Lỗi khi đăng xuất", details = ex.Message });
             }
         }
     }

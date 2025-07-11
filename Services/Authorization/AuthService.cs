@@ -302,6 +302,22 @@ namespace WebAPISalesManagement.Services.Authorization
             var response = await client.PutAsync($"{_configuration.GetJWT().SUPABASE_URL}/auth/v1/user", content);
             return response.IsSuccessStatusCode;
         }
+        public async Task<bool> Logout()
+        {
+            try
+            {
+                await _supabaseClient.Auth.SignOut();
+
+                // (Tuỳ chọn) Xoá refresh token lưu trong DB nếu bạn lưu
+                // await _refreshTokenService.DeleteAsync(userId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
 
     }
 }

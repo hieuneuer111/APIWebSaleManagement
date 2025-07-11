@@ -15,5 +15,6 @@ namespace WebAPISalesManagement.Services.Authorization
         Task<Response<SupabaseResponse>> ReloadByRefreshToken(string refreshToken);
         Task<bool> VerifyEmailAsync(Guid idUser);
         Task<UserResponse> GetUserInfoById(Guid uid);
+        Task<bool> Logout();
     }
 }
